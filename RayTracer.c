@@ -1,4 +1,5 @@
 #include "poligonos.h"
+#include "imagen_avs.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
