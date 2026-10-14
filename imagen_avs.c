@@ -33,9 +33,7 @@ static unsigned char convertir_color(double valor) {
 
 FILE* avs_abrir(const char* nombre, unsigned int ancho, unsigned int alto) {
     if (nombre == NULL || nombre[0] == '\0' ||
-        ancho == 0 || alto == 0 ||
-        (uintmax_t)ancho > UINT32_MAX ||
-        (uintmax_t)alto > UINT32_MAX) {
+        ancho == 0 || alto == 0) {
         return NULL;
     }
 

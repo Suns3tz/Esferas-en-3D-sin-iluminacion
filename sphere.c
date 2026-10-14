@@ -5,7 +5,7 @@
 
 
 Polygon* create_sphere(int id, Vector center, double radio, RGB color){
-	Polygon* obj = (Polygon)malloc(sizeof(Polygon));
+	Polygon* obj = malloc(sizeof *obj);
 	if (!obj) return NULL;
 	
 	Sphere* sphere = (Sphere*)malloc(sizeof(Sphere));

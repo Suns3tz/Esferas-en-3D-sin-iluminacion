@@ -5,7 +5,7 @@
 # BACKGROUND [r] [g] [b]
 # SPHERE [x] [y] [z] [radio] [r] [g] [b]
 
-RES 1008 567
+RES 1300 760
 EYE 0.0 0.0 -5.0
 BACKGROUND 0.45 0.45 0.45
 

@@ -1,36 +1,14 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
-#include "sphere.c"
-
-typedef struct {
-	Polygon* head;
-	int Count;
-} Scene;
-
-typedef struct {
-	int id;	
-	RGB* color;
-	Polygon* next_p;
-	void* private_data;
-	int (*calculate_intersection)
-	(void* private_data, 
-	const Ray* ray, 
-	Intersection* intersection);
-} Polygon;
+// Declaración adelantada porque Polygon se referencia a sí mismo
+typedef struct Polygon Polygon;
 
 typedef struct {
 	double R;
 	double G;
 	double B;
-}RGB;
-
-
-typedef struct {
-	double t;
-	Polygon* object;
-	Vector point;
-} Intersection;
+} RGB;
 
 typedef struct {
 	double x;
@@ -44,6 +22,29 @@ typedef struct {
 	Vector rayo;
 } Ray;
 
+typedef struct {
+	double t;
+	Polygon* object;
+	Vector point;
+} Intersection;
+
+struct Polygon {
+    int id;
+    RGB color;
+    Polygon* next_p;
+    void* private_data;
+    int (*calculate_intersection)(
+        void* private_data,
+        const Ray* ray,
+        Intersection* intersection
+    );
+};
+
+typedef struct {
+	Polygon* head;
+	int Count;
+} Scene;
+
 typedef struct{
 	double radio;
 	Vector center;
@@ -54,6 +55,6 @@ int sphere_intersect
 	const Ray* ray, 
 	Intersection* intersection);
 
-Polygon* create_sphere(int id, Vector center, double radio);
+Polygon* create_sphere(int id, Vector center, double radio, RGB color);
 
 #endif
