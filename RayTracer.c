@@ -1,6 +1,7 @@
 #include "poligonos.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 /*
 
@@ -23,8 +24,8 @@ background->R = 1.0f;
 background->G = 1.0f;
 background->B = 1.0f;
 
-RGB* De_Que_Color(Vector a, Vector b);
-Intersection* First_Intersection(Vector a, Vector b);
+RGB* De_Que_Color(Vector a, Vector b, Scene* scene);
+Intersection* First_Intersection(Vector* a, Vector* b, Scene* scene);
 
 Scene* create_scene(){
 	Scene* scene = (Scene*)malloc(sizeof(Scene));
@@ -40,11 +41,11 @@ void scene_add_object(Scene* scene, Polygon* obj){
 	scene->Count++;
 }
 
-RGB* De_Que_Color(Vector a, Vector b){
+RGB* De_Que_Color(Vector a, Vector b, Scene* scene){
 	RGB* color;
 	Intersection* inter;
 	
-	inter = First_Intersection(a,b);
+	inter = First_Intersection(&a, &b, scene);
 	if(!inter){
 		color = background;
 	}else{
@@ -54,16 +55,28 @@ RGB* De_Que_Color(Vector a, Vector b){
 }
 
 Intersection* First_Intersection(Vector* a, Vector* b, Scene* scene){
-	Intersection* inter;
-	double tmin;
-	inter = NULL;
-	tmin = 10000000;
+	Intersection* interseccion;
+	Intersection actual;
+	long double tmin;
+	Ray ray = {0};
+
+	ray.origin = *a;
+	ray.rayo = *b;		
+
+	interseccion = NULL;
+	tmin = INFINITY;
 	Polygon* current = scene->head;
 	while (current != NULL) {
-		//Calcular interseccion
-		
+		int hay = current->calculate_intersection(current->private_data, &ray, &actual);
+		if (hay && actual.t < tmin) {
+			tmin = actual.t;	
+			actual.object = current;
+			if (!interseccion) interseccion = (Intersection*)malloc(sizeof(Intersection));
+			*interseccion = actual;
+		}
+		current = current->next_p;
 	}
-	
+	return interseccion;
 }
 
 
