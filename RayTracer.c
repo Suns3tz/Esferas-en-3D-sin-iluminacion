@@ -8,9 +8,10 @@ Estructura del archivo que entra.
 
 RES 1008 567
 OJO 0.0 0.0 0.0
+BACKGROUND 1.0 1.0 1.0 (RGB)
 SPHERES 8
 //La esfera tiene [x,y,z] radio y rgb
-SPHERE 0.0 0.0 0.0 4 255 255 255
+SPHERE 0.0 0.0 0.0 4 1.0 1.0 1.0
 
 
 **/
