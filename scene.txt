@@ -7,7 +7,7 @@
 
 RES 1008 567
 EYE 0.0 0.0 -5.0
-BACKGROUND 0.1 0.1 0.1
+BACKGROUND 0.45 0.45 0.45
 
 # Mínimo 8 esferas requeridas distribuidas en el espacio 3D
 SPHERE  0.0  0.0  5.0   1.2   1.0  0.2  0.2   # Esfera Roja (Centro)
