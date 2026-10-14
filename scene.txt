@@ -1,0 +1,20 @@
+# Archivo de configuracion de escena para Ray Tracing (Esferas)
+# Sintaxis:
+# RES [ancho] [alto]
+# EYE [x] [y] [z]
+# BACKGROUND [r] [g] [b]
+# SPHERE [x] [y] [z] [radio] [r] [g] [b]
+
+RES 1008 567
+EYE 0.0 0.0 -5.0
+BACKGROUND 0.1 0.1 0.1
+
+# Mínimo 8 esferas requeridas distribuidas en el espacio 3D
+SPHERE  0.0  0.0  5.0   1.2   1.0  0.2  0.2   # Esfera Roja (Centro)
+SPHERE -2.5  1.0  6.0   1.0   0.2  1.0  0.2   # Esfera Verde (Izquierda arriba)
+SPHERE  2.5 -1.0  7.0   1.4   0.2  0.2  1.0   # Esfera Azul (Derecha abajo)
+SPHERE -1.5 -2.0  5.5   0.8   1.0  1.0  0.0   # Esfera Amarilla (Abajo izquierda)
+SPHERE  2.0  2.0  8.0   1.5   0.0  1.0  1.0   # Esfera Cyan (Derecha arriba, más lejos)
+SPHERE  0.0 -2.5  6.5   0.9   1.0  0.0  1.0   # Esfera Magenta (Abajo centro)
+SPHERE -3.5  0.0  9.0   1.8   0.5  0.5  0.5   # Esfera Gris (Izquierda fondo)
+SPHERE  3.5  1.5  6.0   1.1   1.0  0.5  0.0   # Esfera Naranja (Derecha centro)
