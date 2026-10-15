@@ -169,8 +169,8 @@ int main(void) {
     }
 
     // Ventana de proyección en el plano z = 0
-    double xmin = -3.0;
-    double xmax =  3.0;
+    double xmin = -300.0;
+    double xmax =  300.0;
 
     double altura_ventana = (xmax - xmin) * ((double)Vres / Hres);
 

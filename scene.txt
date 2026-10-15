@@ -1,20 +1,18 @@
-# Archivo de configuracion de escena para Ray Tracing (Esferas)
-# Sintaxis:
 # RES [ancho] [alto]
 # EYE [x] [y] [z]
 # BACKGROUND [r] [g] [b]
 # SPHERE [x] [y] [z] [radio] [r] [g] [b]
 
 RES 1300 760
-EYE 0.0 0.0 -5.0
-BACKGROUND 0.45 0.45 0.45
+EYE 0.0 0.0 -500.0
+BACKGROUND 0.0 0.0275 0.1765
 
-# Mínimo 8 esferas requeridas distribuidas en el espacio 3D
-SPHERE  0.0  0.0  5.0   1.2   1.0  0.2  0.2   # Esfera Roja (Centro)
-SPHERE -2.5  1.0  6.0   1.0   0.2  1.0  0.2   # Esfera Verde (Izquierda arriba)
-SPHERE  2.5 -1.0  7.0   1.4   0.2  0.2  1.0   # Esfera Azul (Derecha abajo)
-SPHERE -1.5 -2.0  5.5   0.8   1.0  1.0  0.0   # Esfera Amarilla (Abajo izquierda)
-SPHERE  2.0  2.0  8.0   1.5   0.0  1.0  1.0   # Esfera Cyan (Derecha arriba, más lejos)
-SPHERE  0.0 -2.5  6.5   0.9   1.0  0.0  1.0   # Esfera Magenta (Abajo centro)
-SPHERE -3.5  0.0  9.0   1.8   0.5  0.5  0.5   # Esfera Gris (Izquierda fondo)
-SPHERE  3.5  1.5  6.0   1.1   1.0  0.5  0.0   # Esfera Naranja (Derecha centro)
+SPHERE   -420.0  110.0  160.0  100.0   1.0    0.8    0.2   # SUN
+SPHERE   -270.0   75.0  125.0   15.0   0.59   0.51   0.48  # MERCURY
+SPHERE   -205.0   55.0  100.0   30.0   0.96   0.88   0.69  # VENUS
+SPHERE   -125.0   35.0   75.0   35.0   0.168  0.356  0.517 # EARTH
+SPHERE    -50.0   15.0   50.0   22.0   0.8    0.3    0.1   # MARS
+SPHERE     40.0  -10.0   20.0   60.0   0.85   0.75   0.6   # JUPITER
+SPHERE    150.0  -35.0  -15.0   45.0   0.9    0.85   0.65  # SATURN
+SPHERE    230.0  -55.0  -45.0   26.0   0.5    0.8    0.9   # URANUS
+SPHERE    300.0  -75.0  -75.0   24.0   0.2    0.4    0.8   # NEPTUNE
