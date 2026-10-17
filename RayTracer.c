@@ -6,19 +6,6 @@
 #include <string.h>
 #include <stdint.h>
 
-/*
-
-Estructura del archivo que entra.
-
-RES 1008 567
-OJO 0.0 0.0 0.0
-BACKGROUND 1.0 1.0 1.0 (RGB)
-//La esfera tiene [x,y,z] radio y rgb
-SPHERE 0.0 0.0 0.0 4 1.0 1.0 1.0
-
-
-**/
-
 
 int WIDTH = 0;
 int HEIGHT = 0;
@@ -40,6 +27,7 @@ Scene* load_scene(const char* file_name){
 	}
 	
 	Scene* scene = create_scene();
+	
 	char line[256];
 	while(fgets(line, sizeof(line), file)){
 		if(line[0] == '#' || line[0] == '\n' || line[0] == '\r') continue;
@@ -56,11 +44,26 @@ Scene* load_scene(const char* file_name){
 		else if(strcmp(keyword, "BACKGROUND") == 0){
 			sscanf(line, "%*s %lf %lf %lf", &background.R, &background.G, &background.B);
 		}
+		else if(strcmp(keyword, "LIGHT_AMB") == 0){
+			sscanf(line, "%*s %lf", &scene->light_amb);
+		}
+		else if(strcmp(keyword, "LIGHT") == 0){
+			double x, y, z, ip, c1, c2, c3;
+			sscanf(line, "%*s %lf %lf %lf %lf %lf %lf %lf", &x, &y, &z, &ip, &c1, &c2, &c3);
+			scene->N_lights++;
+			scene->lights = (Light**)realloc(scene->lights, scene->N_lights * sizeof(Light*));
+			scene->lights[scene->N_lights - 1] = (Light*)malloc(sizeof(Light));
+			scene->lights[scene->N_lights - 1]->PoL = (Vector){x , y, z};
+			scene->lights[scene->N_lights - 1]->light_Ip = ip;
+			scene->lights[scene->N_lights - 1]->c1 = c1;
+			scene->lights[scene->N_lights - 1]->c2 = c2;
+			scene->lights[scene->N_lights - 1]->c3 = c3;
+		}
 		else if(strcmp(keyword, "SPHERE") == 0){
-			double x, y, z, radio, r, g, b;
-			sscanf(line, "%*s %lf %lf %lf %lf %lf %lf %lf", &x, &y, &z, &radio, &r, &g, &b);
+			double x, y, z, radio, r, g, b, Kd, Ka;
+			sscanf(line, "%*s %lf %lf %lf %lf %lf %lf %lf %lf %lf", &x, &y, &z, &radio, &r, &g, &b, &Kd, &Ka );
 			
-			Polygon* obj = create_sphere(scene->Count + 1, (Vector){x, y, z}, radio, (RGB){r, g, b});
+			Polygon* obj = create_sphere(scene->Count + 1, (Vector){x, y, z}, radio, (RGB){r, g, b}, Kd, Ka);
 			if(obj){
 				scene_add_object(scene, obj);
 			}
@@ -74,6 +77,8 @@ Scene* create_scene(){
 	Scene* scene = (Scene*)malloc(sizeof(Scene));
 	if (!scene) return NULL;
 	scene->head = NULL;
+	scene->lights = NULL;
+	scene->N_lights = 0;
 	scene->Count = 0;
 	return scene;
 }
@@ -90,14 +95,43 @@ RGB* De_Que_Color(Vector a, Vector b, Scene* scene){
 
 	if (inter == NULL) {
         return &background;
-    }
-
-    // Dirección del color guardado dentro del objeto.
-    RGB* color = &inter->object->color;
-
-    free(inter);
-
+    }else{
+		Polygon* obj = inter->object;
+		Vector Normal = obj->calculate_normal(&inter->object_point, obj->private_data);
+		double I = 0.0;
+		int k;
+		for (k = 0; k < scene->N_lights; k++){
+			double dx =(scene->lights[k]->PoL.x - inter->object_point.x);
+			double dy =(scene->lights[k]->PoL.y - inter->object_point.y);
+			double dz =(scene->lights[k]->PoL.z - inter->object_point.z);
+			double dist = sqrt(dx * dx + dy * dy + dz * dz);
+			Vector L = { dx / dist,
+				         dy / dist,
+				         dz / dist};
+			double prod_punto = (Normal.x * L.x) + (Normal.y * L.y) + (Normal.z * L.z);
+			
+			if (prod_punto < 0.0){
+				continue;
+			}
+			
+			double Fatt =  fmin(1.0, 1.0 / (scene->lights[k]->c1 + 
+			                                scene->lights[k]->c2 * dist + 
+			                                scene->lights[k]->c3 * dist * dist));
+			
+			I += (prod_punto *  obj->light_kd * Fatt * scene->lights[k]->light_Ip);
+		} 
+		I += scene->light_amb * obj->light_ka;
+		I = fmin(1.0 , I);
+		
+		RGB* color = (RGB*)malloc(sizeof(RGB));
+		color->R = obj->color.R * I;
+		color->G = obj->color.G * I;
+		color->B = obj->color.B * I;
+		
+		free(inter);
+	
     return color;
+	}
 }
 
 Intersection* First_Intersection(Vector* a, Vector* b, Scene* scene){
@@ -117,6 +151,9 @@ Intersection* First_Intersection(Vector* a, Vector* b, Scene* scene){
 		if (hay && actual.t < tmin) {
 			tmin = actual.t;	
 			actual.object = current;
+			actual.object_point.x = a->x + (tmin * b->x);
+			actual.object_point.y = a->y + (tmin * b->y);
+			actual.object_point.z = a->z + (tmin * b->z);
 			if (interseccion == NULL) {
 				interseccion = malloc(sizeof *interseccion);
 
@@ -136,7 +173,7 @@ static void liberar_escena(Scene* scene) {
     if (scene == NULL) {
         return;
     }
-
+	
     Polygon* actual = scene->head;
 
     while (actual != NULL) {
@@ -245,7 +282,6 @@ int main(void) {
         }
     }
 
-    // saveFile(framebuffer)
     const char* nombre_imagen = "escena.avs";
 
     FILE* archivo = avs_abrir(nombre_imagen, (unsigned int)Hres, (unsigned int)Vres);

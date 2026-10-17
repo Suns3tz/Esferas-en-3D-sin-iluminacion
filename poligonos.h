@@ -26,22 +26,39 @@ typedef struct {
 	double t;
 	Polygon* object;
 	Vector point;
+	Vector object_point;
 } Intersection;
 
 struct Polygon {
     int id;
     RGB color;
     Polygon* next_p;
+    double light_kd; 
+    double light_ka;
     void* private_data;
     int (*calculate_intersection)(
         void* private_data,
         const Ray* ray,
         Intersection* intersection
     );
+    Vector (*calculate_normal)(
+    Vector* point,
+    void* private_data);
 };
 
 typedef struct {
+	double light_Ip;
+	Vector PoL;
+	double c1;
+	double c2;
+	double c3;
+} Light;
+
+typedef struct {
+	double light_amb;
 	Polygon* head;
+	Light** lights;
+	int N_lights;
 	int Count;
 } Scene;
 
@@ -54,7 +71,10 @@ int sphere_intersect
 	(void* private_data, 
 	const Ray* ray, 
 	Intersection* intersection);
+	
+Vector normal_sphere(Vector* point, void* private_data);
 
-Polygon* create_sphere(int id, Vector center, double radio, RGB color);
+
+Polygon* create_sphere(int id, Vector center, double radio, RGB color, double Ka, double Kd);
 
 #endif

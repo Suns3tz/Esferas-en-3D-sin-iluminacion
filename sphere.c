@@ -4,7 +4,7 @@
 #include <math.h>
 
 
-Polygon* create_sphere(int id, Vector center, double radio, RGB color){
+Polygon* create_sphere(int id, Vector center, double radio, RGB color, double Kd, double Ka){
 	Polygon* obj = malloc(sizeof *obj);
 	if (!obj) return NULL;
 	
@@ -22,7 +22,9 @@ Polygon* create_sphere(int id, Vector center, double radio, RGB color){
 	obj->next_p = NULL;
 	obj->private_data = sphere;
 	obj->calculate_intersection = sphere_intersect;
-	
+	obj->calculate_normal = normal_sphere;
+	obj->light_ka = Ka;
+	obj->light_kd = Kd;
 	return obj;
 }
 
@@ -66,4 +68,15 @@ int sphere_intersect(void* private_data, const Ray* ray, Intersection* intersect
 	intersection->point.z = ray->origin.z + t * ray->rayo.z;
 
 	return 1;
+}
+
+
+Vector normal_sphere(Vector* point, void* private_data){
+	Vector normal;
+	Sphere* sphere = (Sphere*) private_data;
+	double radio = sphere->radio;
+	normal.x = (point->x - sphere->center.x) / radio;
+	normal.y = (point->y - sphere->center.y) / radio;
+	normal.z = (point->z - sphere->center.z) / radio;
+	return normal;
 }
