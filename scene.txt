@@ -4,6 +4,10 @@
 # LIGHT_AMB [AMB]
 # LIGHT [x] [y] [z] [IP] [C1] [C2] [C3]
 # SPHERE [x] [y] [z] [radio] [r] [g] [b] [KD] [KA]
+# POLYGON [r] [g] [b] [KD] [KA] [N]
+#   seguido de N lineas: VERTEX [x] [y] [z]
+#   Los vertices van en sentido HORARIO visto desde el ojo, si no la cara queda
+#   de espaldas a la luz y solo recibe luz ambiente.
 
 RES 1300 760
 EYE 300.0 0.0 -700.0
@@ -20,3 +24,36 @@ SPHERE     40.0  -10.0   20.0   60.0   0.85   0.75   0.6   0.4 0.5# JUPITER
 SPHERE    150.0  -35.0  -15.0   45.0   0.9    0.85   0.65  0.4 0.5# SATURN
 SPHERE    230.0  -55.0  -45.0   26.0   0.5    0.8    0.9   0.4 0.5# URANUS
 SPHERE    300.0  -75.0  -75.0   24.0   0.2    0.4    0.8   0.4 0.5# NEPTUNE
+
+# Cubo de prueba cerca del sol (lado 120, girado -25 en x y 40 en y)
+# Cada cara en sentido horario visto desde afuera del cubo
+POLYGON  0.8 0.2 0.2  0.7 0.3  4   # frente (-z)
+VERTEX   -284.62  -179.74   316.34
+VERTEX   -317.22   -70.98   277.49
+VERTEX   -225.29   -70.98   200.35
+VERTEX   -192.69  -179.74   239.20
+POLYGON  0.8 0.2 0.2  0.7 0.3  4   # atras (+z)
+VERTEX   -214.71  -129.02   399.65
+VERTEX   -122.78  -129.02   322.51
+VERTEX   -155.38   -20.26   283.66
+VERTEX   -247.31   -20.26   360.80
+POLYGON  0.8 0.2 0.2  0.7 0.3  4   # izquierda (-x)
+VERTEX   -284.62  -179.74   316.34
+VERTEX   -214.71  -129.02   399.65
+VERTEX   -247.31   -20.26   360.80
+VERTEX   -317.22   -70.98   277.49
+POLYGON  0.8 0.2 0.2  0.7 0.3  4   # derecha (+x)
+VERTEX   -192.69  -179.74   239.20
+VERTEX   -225.29   -70.98   200.35
+VERTEX   -155.38   -20.26   283.66
+VERTEX   -122.78  -129.02   322.51
+POLYGON  0.8 0.2 0.2  0.7 0.3  4   # arriba (+y)
+VERTEX   -317.22   -70.98   277.49
+VERTEX   -247.31   -20.26   360.80
+VERTEX   -155.38   -20.26   283.66
+VERTEX   -225.29   -70.98   200.35
+POLYGON  0.8 0.2 0.2  0.7 0.3  4   # abajo (-y)
+VERTEX   -284.62  -179.74   316.34
+VERTEX   -192.69  -179.74   239.20
+VERTEX   -122.78  -129.02   322.51
+VERTEX   -214.71  -129.02   399.65
