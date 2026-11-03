@@ -68,6 +68,25 @@ Scene* load_scene(const char* file_name){
 				scene_add_object(scene, obj);
 			}
 		}
+		else if(strcmp(keyword, "POLYGON") == 0){
+			double r, g, b, Kd, Ka;
+			int n;
+			sscanf(line, "%*s %lf %lf %lf %lf %lf %d", &r, &g, &b, &Kd, &Ka, &n);
+
+			Vector* vertices = (Vector*)malloc(n * sizeof(Vector));
+			if(!vertices) continue;
+
+			
+			for(int k = 0; k < n && fgets(line, sizeof(line), file); k++){
+				sscanf(line, "%*s %lf %lf %lf", &vertices[k].x, &vertices[k].y, &vertices[k].z);
+			}
+
+			Polygon* obj = create_polygon(scene->Count + 1, vertices, n, (RGB){r, g, b}, Kd, Ka);
+			if(obj){
+				scene_add_object(scene, obj);
+			}
+			free(vertices);
+		}
 	}
 	fclose(file);
 	return scene;
@@ -179,7 +198,7 @@ static void liberar_escena(Scene* scene) {
     while (actual != NULL) {
         Polygon* siguiente = actual->next_p;
 
-        free(actual->private_data);
+        actual->free_data(actual->private_data);
         free(actual);
 
         actual = siguiente;

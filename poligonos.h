@@ -1,6 +1,8 @@
 #ifndef POLYGON_H
 #define POLYGON_H
 
+#define EPSILON 0.0005
+
 // Declaración adelantada porque Polygon se referencia a sí mismo
 typedef struct Polygon Polygon;
 
@@ -44,6 +46,7 @@ struct Polygon {
     Vector (*calculate_normal)(
     Vector* point,
     void* private_data);
+    void (*free_data)(void* private_data);
 };
 
 typedef struct {
@@ -67,6 +70,15 @@ typedef struct{
 	Vector center;
 } Sphere;
 
+typedef struct{
+	int n;              
+	Vector* vertices;   
+	double A, B, C, D;  
+	int ignored_axis;           // coordenada eliminada 0 = x, 1 = y, 2 = z
+	double* u;          
+	double* v;
+} PolygonData;
+
 int sphere_intersect
 	(void* private_data, 
 	const Ray* ray, 
@@ -76,5 +88,14 @@ Vector normal_sphere(Vector* point, void* private_data);
 
 
 Polygon* create_sphere(int id, Vector center, double radio, RGB color, double Ka, double Kd);
+
+int polygon_intersect
+	(void* private_data,
+	const Ray* ray,
+	Intersection* intersection);
+
+Vector normal_polygon(Vector* point, void* private_data);
+
+Polygon* create_polygon(int id, Vector* vertices, int n, RGB color, double Kd, double Ka);
 
 #endif

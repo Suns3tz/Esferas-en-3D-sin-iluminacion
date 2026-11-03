@@ -3,7 +3,7 @@ CFLAGS = -std=c11 -Wall -Wextra -O2
 LDLIBS = -lm
 
 TARGET = raytracer
-OBJECTS = RayTracer.o sphere.o imagen_avs.o
+OBJECTS = RayTracer.o sphere.o polygon.o imagen_avs.o
 
 .PHONY: all run clean
 
@@ -17,6 +17,9 @@ RayTracer.o: RayTracer.c poligonos.h imagen_avs.h
 
 sphere.o: sphere.c poligonos.h
 	$(CC) $(CFLAGS) -c sphere.c -o $@
+
+polygon.o: polygon.c poligonos.h
+	$(CC) $(CFLAGS) -c polygon.c -o $@
 
 imagen_avs.o: imagen_avs.c imagen_avs.h
 	$(CC) $(CFLAGS) -c imagen_avs.c -o $@

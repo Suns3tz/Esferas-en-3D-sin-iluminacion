@@ -23,6 +23,7 @@ Polygon* create_sphere(int id, Vector center, double radio, RGB color, double Kd
 	obj->private_data = sphere;
 	obj->calculate_intersection = sphere_intersect;
 	obj->calculate_normal = normal_sphere;
+	obj->free_data = free;
 	obj->light_ka = Ka;
 	obj->light_kd = Kd;
 	return obj;
