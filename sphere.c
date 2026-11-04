@@ -4,7 +4,7 @@
 #include <math.h>
 
 
-Polygon* create_sphere(int id, Vector center, double radio, RGB color, double Kd, double Ka){
+Polygon* create_sphere(int id, Vector center, double radio, RGB color, double Kd, double Ka, double Kn, double Ks){
 	Polygon* obj = malloc(sizeof *obj);
 	if (!obj) return NULL;
 	
@@ -26,6 +26,8 @@ Polygon* create_sphere(int id, Vector center, double radio, RGB color, double Kd
 	obj->free_data = free;
 	obj->light_ka = Ka;
 	obj->light_kd = Kd;
+	obj->light_kn = Kn;
+	obj->light_ks = Ks;
 	return obj;
 }
 

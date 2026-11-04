@@ -37,6 +37,8 @@ struct Polygon {
     Polygon* next_p;
     double light_kd; 
     double light_ka;
+    double light_kn;
+    double light_ks;
     void* private_data;
     int (*calculate_intersection)(
         void* private_data,
@@ -87,7 +89,7 @@ int sphere_intersect
 Vector normal_sphere(Vector* point, void* private_data);
 
 
-Polygon* create_sphere(int id, Vector center, double radio, RGB color, double Ka, double Kd);
+Polygon* create_sphere(int id, Vector center, double radio, RGB color, double Ka, double Kd, double Kn, double Ks);
 
 int polygon_intersect
 	(void* private_data,
@@ -96,6 +98,6 @@ int polygon_intersect
 
 Vector normal_polygon(Vector* point, void* private_data);
 
-Polygon* create_polygon(int id, Vector* vertices, int n, RGB color, double Kd, double Ka);
+Polygon* create_polygon(int id, Vector* vertices, int n, RGB color, double Kd, double Ka, double Kn, double Ks);
 
 #endif

@@ -59,18 +59,18 @@ Scene* load_scene(const char* file_name){
 			scene->lights[scene->N_lights - 1]->c3 = c3;
 		}
 		else if(strcmp(keyword, "SPHERE") == 0){
-			double x, y, z, radio, r, g, b, Kd, Ka;
-			sscanf(line, "%*s %lf %lf %lf %lf %lf %lf %lf %lf %lf", &x, &y, &z, &radio, &r, &g, &b, &Kd, &Ka );
+			double x, y, z, radio, r, g, b, Kd, Ka, Kn, Ks;
+			sscanf(line, "%*s %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf", &x, &y, &z, &radio, &r, &g, &b, &Kd, &Ka, &Kn, &Ks );
 			
-			Polygon* obj = create_sphere(scene->Count + 1, (Vector){x, y, z}, radio, (RGB){r, g, b}, Kd, Ka);
+			Polygon* obj = create_sphere(scene->Count + 1, (Vector){x, y, z}, radio, (RGB){r, g, b}, Kd, Ka, Kn, Ks);
 			if(obj){
 				scene_add_object(scene, obj);
 			}
 		}
 		else if(strcmp(keyword, "POLYGON") == 0){
-			double r, g, b, Kd, Ka;
+			double r, g, b, Kd, Ka, Kn, Ks;
 			int n;
-			sscanf(line, "%*s %lf %lf %lf %lf %lf %d", &r, &g, &b, &Kd, &Ka, &n);
+			sscanf(line, "%*s %lf %lf %lf %lf %lf %lf %lf %d", &r, &g, &b, &Kd, &Ka, &Kn, &Ks,  &n);
 
 			Vector* vertices = (Vector*)malloc(n * sizeof(Vector));
 			if(!vertices) continue;
@@ -80,7 +80,7 @@ Scene* load_scene(const char* file_name){
 				sscanf(line, "%*s %lf %lf %lf", &vertices[k].x, &vertices[k].y, &vertices[k].z);
 			}
 
-			Polygon* obj = create_polygon(scene->Count + 1, vertices, n, (RGB){r, g, b}, Kd, Ka);
+			Polygon* obj = create_polygon(scene->Count + 1, vertices, n, (RGB){r, g, b}, Kd, Ka, Kn, Ks);
 			if(obj){
 				scene_add_object(scene, obj);
 			}
@@ -117,6 +117,7 @@ RGB* De_Que_Color(Vector a, Vector b, Scene* scene){
 		Polygon* obj = inter->object;
 		Vector Normal = obj->calculate_normal(&inter->object_point, obj->private_data);
 		double I = 0.0;
+		double E = 0.0;
 		int k;
 		for (k = 0; k < scene->N_lights; k++){
 			double dx =(scene->lights[k]->PoL.x - inter->object_point.x);
@@ -136,17 +137,36 @@ RGB* De_Que_Color(Vector a, Vector b, Scene* scene){
 			                       scene->lights[k]->c3 * dist * dist));
 			
 				I += (prod_punto *  obj->light_kd * Fatt * scene->lights[k]->light_Ip);
+				// Reflexion Especular
+				Vector V = { -b.x, -b.y, -b.z};
+				Vector R = 
+				{
+					2.0 * Normal.x * prod_punto - L.x,
+					2.0 * Normal.y * prod_punto - L.y,
+					2.0 * Normal.z * prod_punto - L.z
+					};
+				double prod_punto_E = (R.x * V.x) + (R.y * V.y) + (R.z * V.z);
+				if (prod_punto_E > 0.0){
+					int exp = (int)obj->light_kn;
+					double fact_E = 1.0;
+					for (int s = 0; s < exp; s++){
+						fact_E *= prod_punto_E;
+					}	
+					E += (fact_E * Fatt * scene->lights[k]->light_Ip * obj->light_ks); 
+				}
+				
+				
 				}
 			free(obstaculo);
 			}
 		} 
 		I += scene->light_amb * obj->light_ka;
 		I = fmin(1.0 , I);
-		
+		E = fmin(1.0 , E);
 		RGB* color = (RGB*)malloc(sizeof(RGB));
-		color->R = obj->color.R * I;
-		color->G = obj->color.G * I;
-		color->B = obj->color.B * I;
+		color->R = obj->color.R * I + E;
+		color->G = obj->color.G * I + E;
+		color->B = obj->color.B * I + E;
 		
 		free(inter);
 	

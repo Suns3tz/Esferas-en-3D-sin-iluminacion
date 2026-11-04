@@ -14,7 +14,7 @@ static void free_polygon_data(void* private_data){
 	free(polygon);
 }
 
-Polygon* create_polygon(int id, Vector* vertices, int n, RGB color, double Kd, double Ka){
+Polygon* create_polygon(int id, Vector* vertices, int n, RGB color, double Kd, double Ka, double Kn, double Ks){
 	if (!vertices || n < 3) {
 		fprintf(stderr, "Poligono %d: necesita al menos 3 vertices.\n", id);
 		return NULL;
@@ -102,6 +102,8 @@ Polygon* create_polygon(int id, Vector* vertices, int n, RGB color, double Kd, d
 	obj->free_data = free_polygon_data;
 	obj->light_ka = Ka;
 	obj->light_kd = Kd;
+	obj->light_kn = Kn;
+	obj->light_ks = Ks;
 	return obj;
 }
 
