@@ -6,7 +6,6 @@
 #include <string.h>
 #include <stdint.h>
 
-
 int WIDTH = 0;
 int HEIGHT = 0;
 
@@ -128,16 +127,18 @@ RGB* De_Que_Color(Vector a, Vector b, Scene* scene){
 				         dy / dist,
 				         dz / dist};
 			double prod_punto = (Normal.x * L.x) + (Normal.y * L.y) + (Normal.z * L.z);
+			if (prod_punto > 0.0){
+				Intersection* obstaculo = First_Intersection(&inter->object_point, &L, scene);
 			
-			if (prod_punto < 0.0){
-				continue;
+			if ( !obstaculo || obstaculo->t > dist){
+				double Fatt =  fmin(1.0, 1.0 / (scene->lights[k]->c1 + 
+			                       scene->lights[k]->c2 * dist + 
+			                       scene->lights[k]->c3 * dist * dist));
+			
+				I += (prod_punto *  obj->light_kd * Fatt * scene->lights[k]->light_Ip);
+				}
+			free(obstaculo);
 			}
-			
-			double Fatt =  fmin(1.0, 1.0 / (scene->lights[k]->c1 + 
-			                                scene->lights[k]->c2 * dist + 
-			                                scene->lights[k]->c3 * dist * dist));
-			
-			I += (prod_punto *  obj->light_kd * Fatt * scene->lights[k]->light_Ip);
 		} 
 		I += scene->light_amb * obj->light_ka;
 		I = fmin(1.0 , I);
@@ -164,10 +165,11 @@ Intersection* First_Intersection(Vector* a, Vector* b, Scene* scene){
 
 	interseccion = NULL;
 	tmin = INFINITY;
+	actual.t = EPSILON;
 	Polygon* current = scene->head;
 	while (current != NULL) {
 		int hay = current->calculate_intersection(current->private_data, &ray, &actual);
-		if (hay && actual.t < tmin) {
+		if (hay && actual.t < tmin && actual.t > EPSILON) {
 			tmin = actual.t;	
 			actual.object = current;
 			actual.object_point.x = a->x + (tmin * b->x);
