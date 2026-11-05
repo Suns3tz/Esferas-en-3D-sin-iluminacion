@@ -1,17 +1,13 @@
-# Mini arcade
-#
+
 # RES [ancho] [alto]
 # EYE [x] [y] [z]
 # BACKGROUND [r] [g] [b]
 # LIGHT_AMB [AMB]
 # LIGHT [x] [y] [z] [IP] [C1] [C2] [C3]
-# SPHERE [x] [y] [z] [radio] [r] [g] [b] [KD] [KA] [KN] [KS]
-# POLYGON [r] [g] [b] [KD] [KA] [KN] [KS] [N]
-#   KN: que tan concentrado es el brillo especular (exponente entero).
-#   KS: que tan fuerte es ese brillo (0 = sin brillo).
-#   seguido de N lineas: VERTEX [x] [y] [z]
-#   Sin comentarios ni lineas vacias entre POLYGON y sus VERTEX.
-#   Orden de los vertices: horario visto desde el lado visible de la cara.
+# SPHERE [x] [y] [z] [radio] [r] [g] [b] [KD] [KA]
+# POLYGON [r] [g] [b] [KD] [KA] [N]
+# VERTEX [x] [y] [z]
+# Los vertices van en sentido HORARIO visto desde el ojo
 
 
 RES 1300 760

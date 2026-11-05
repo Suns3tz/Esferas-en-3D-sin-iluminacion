@@ -6,9 +6,8 @@
 # LIGHT [x] [y] [z] [IP] [C1] [C2] [C3]
 # SPHERE [x] [y] [z] [radio] [r] [g] [b] [KD] [KA]
 # POLYGON [r] [g] [b] [KD] [KA] [N]
-# seguido de N lineas: VERTEX [x] [y] [z]
-# Los vertices van en sentido HORARIO visto desde el ojo, si no la cara queda
-# de espaldas a la luz y solo recibe luz ambiente.
+# VERTEX [x] [y] [z]
+# Los vertices van en sentido HORARIO visto desde el ojo
 
 
 RES 1300 760
