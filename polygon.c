@@ -58,7 +58,6 @@ Polygon* create_polygon(int id, Vector* vertices, int n, RGB color, double Kd, d
 
 	// P0, P1 y P2 colineales
 	if (L < EPSILON) {
-		fprintf(stderr, "Poligono %d: los primeros 3 vertices son colineales.\n", id);
 		free_polygon_data(polygon);
 		free(obj);
 		return NULL;
